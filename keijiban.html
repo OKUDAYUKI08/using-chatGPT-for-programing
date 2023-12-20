@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>画像投稿掲示板</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    #messageContainer {
+      margin-bottom: 20px;
+    }
+
+    #nameInput, #messageInput, #imageInput {
+      margin-bottom: 10px;
+      padding: 5px;
+    }
+
+    #messageList {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .message {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .deleteButton {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      cursor: pointer;
+      color: red;
+      font-weight: bold;
+    }
+
+    #updateButton, #postButton {
+      padding: 5px;
+      cursor: pointer;
+    }
+
+    img {
+      max-width: 100%;
+      max-height: 200px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="nameContainer">
+  <label for="nameInput">名前:</label>
+  <input type="text" id="nameInput" placeholder="名前を入力">
+  <button onclick="updateName()" id="updateButton">更新</button>
+</div>
+
+<div id="messageContainer">
+  <label for="messageInput">メッセージを投稿:</label>
+  <input type="text" id="messageInput" placeholder="メッセージを入力">
+  <input type="file" id="imageInput" accept="image/*">
+  <button onclick="postMessage()" id="postButton">投稿</button>
+</div>
+
+<ul id="messageList"></ul>
+
+<script>
+  let userName = "匿名";
+
+  function updateName() {
+    const nameInput = document.getElementById("nameInput");
+    const updateButton = document.getElementById("updateButton");
+
+    if (nameInput.value.trim() !== "") {
+      userName = nameInput.value.trim();
+      alert("名前が更新されました: " + userName);
+    } else {
+      alert("名前を入力してください。");
+    }
+  }
+
+  function postMessage() {
+    const messageInput = document.getElementById("messageInput");
+    const imageInput = document.getElementById("imageInput");
+    const messageList = document.getElementById("messageList");
+
+    if (messageInput.value.trim() !== "" || imageInput.files.length > 0) {
+      const messageItem = document.createElement("li");
+      messageItem.className = "message";
+
+      const deleteButton = document.createElement("span");
+      deleteButton.className = "deleteButton";
+      deleteButton.innerHTML = "削除";
+      deleteButton.onclick = function () {
+        messageItem.remove();
+      };
+      messageItem.appendChild(deleteButton);
+
+      const textMessage = `<strong>${userName}:</strong> ${messageInput.value.trim()}`;
+      messageItem.innerHTML += textMessage;
+
+      if (imageInput.files.length > 0) {
+        const image = document.createElement("img");
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          image.src = e.target.result;
+        };
+        reader.readAsDataURL(imageInput.files[0]);
+
+        messageItem.appendChild(document.createElement("br"));
+        messageItem.appendChild(image);
+      }
+
+      messageList.appendChild(messageItem);
+      messageInput.value = "";
+      imageInput.value = "";
+    } else {
+      alert("メッセージまたは画像を入力してください。");
+    }
+  }
+</script>
+
+</body>
+</html>

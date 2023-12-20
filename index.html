@@ -5,7 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hello World Button</title>
   <style>
-    /* スタイルはここに追加 */
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
     button {
       padding: 10px 20px;
       font-size: 16px;
@@ -15,12 +22,9 @@
 </head>
 <body>
 
-<!-- HTMLコードはここに追加 -->
-
 <button onclick="showMessage()">クリックしてください</button>
 
 <script>
-  // JavaScriptコードはここに追加
   function showMessage() {
     alert('Hello World!');
   }

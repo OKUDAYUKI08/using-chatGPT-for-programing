@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple RPG Game</title>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #battle-container {
+      text-align: center;
+    }
+
+    #battle-log {
+      height: 150px;
+      overflow: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    #player-health, #enemy-health {
+      font-weight: bold;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="battle-container">
+  <div id="battle-log"></div>
+  <div id="player-health">Player Health: 100</div>
+  <div id="enemy-health">Enemy Health: 100</div>
+  <button onclick="playerAttack()">Attack</button>
+</div>
+
+<script>
+  let playerHealth = 100;
+  let enemyHealth = 100;
+  let isPlayerTurn = true;
+
+  function playerAttack() {
+    if (isPlayerTurn) {
+      const playerDamage = Math.floor(Math.random() * 10) + 1;
+      enemyHealth -= playerDamage;
+
+      logMessage(`Player dealt ${playerDamage} damage to the enemy.`);
+
+      if (enemyHealth <= 0) {
+        endBattle('Player Wins!');
+      } else {
+        updateHealth();
+        isPlayerTurn = false;
+        setTimeout(enemyAttack, 1000); // 敵の攻撃
+      }
+    }
+  }
+
+  function enemyAttack() {
+    const enemyDamage = Math.floor(Math.random() * 8) + 1;
+    playerHealth -= enemyDamage;
+
+    logMessage(`Enemy dealt ${enemyDamage} damage to the player.`);
+
+    if (playerHealth <= 0) {
+      endBattle('Enemy Wins!');
+    } else {
+      updateHealth();
+      isPlayerTurn = true;
+    }
+  }
+
+  function updateHealth() {
+    document.getElementById('player-health').textContent = `Player Health: ${playerHealth}`;
+    document.getElementById('enemy-health').textContent = `Enemy Health: ${enemyHealth}`;
+  }
+
+  function logMessage(message) {
+    const logElement = document.getElementById('battle-log');
+    logElement.innerHTML += `<p>${message}</p>`;
+    logElement.scrollTop = logElement.scrollHeight;
+  }
+
+  function endBattle(message) {
+    logMessage(message);
+    document.querySelector('button').setAttribute('disabled', 'true');
+  }
+</script>
+
+</body>
+</html>
